@@ -6,7 +6,6 @@ void print_num(int num){
     print_num(num/10);
     printf("%d ", digit);
 }
-
 void forAtoB1(int num1, int num2){
     if(num1 < num2) return;
     printf("%d " , num1);
@@ -17,21 +16,6 @@ void forAtoB2(int num1, int num2){
     printf("%d " , num1);
     forAtoB2(num1 + 1, num2);
 }
-void dec_to_bin(int num){
-    int result = 0;
-    int n = 0;
-    if (num >= 2)
-    dec_to_bin(num / 2);
-    // printf("%d", num%2);
-    
-    if((num%2) == 1){
-        n++;
-    }
-    
-    printf("%d ", n);
-    
-}
-
 void all_odd(int mass[], int index){
     if(mass[index] == 0) return;
     if(mass[index] %2 !=0){
@@ -39,7 +23,6 @@ void all_odd(int mass[], int index){
     }
     all_odd(mass, index+1);
 }
-
 int recurs_power(int n, int p){
     if (p == 0) return 1;
     if (p % 2) return n * recurs_power(n, p - 1);
@@ -75,8 +58,8 @@ int main(void){
         mass[index++] = input;
     } while (input != 0);
     all_odd(mass, 0);
-
     printf("\n");
+    
     printf("Задание 6.\n");
     printf("Введите число: \n");
     int n;
