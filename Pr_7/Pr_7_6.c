@@ -11,7 +11,7 @@ void Solution(int arr[]){
             maxFrequency = frequency[i];
             mostFrequentNumber = i;
         }
-    }
+    } 
     printf("%d \n", mostFrequentNumber);
 }
 int main(void){
