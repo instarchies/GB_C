@@ -9,11 +9,8 @@ void color_of_chess(char arr[]){
         if(n % 2 != 0){printf("White \n");}
         else{printf("Black \n");}
     }
-    
 }
 int main(void){
     char a[] = "G7";
-    
     color_of_chess(a);
-
 }
