@@ -46,14 +46,12 @@ void month_arithmetic_mean(const char *filename, int _month){
     file = fopen(filename, "r");
     if(file == NULL){
         printf("Ошибка чтения файла!");
-        
     }
     while (fscanf(file, "%d;%d;%d;%d;%d;%f", &year, &month, &day, &hour, &minute, &temperature) == 6) {
         if(month == _month){
             month_counter++;
             month_temperature_sum += temperature;
         }
-         
     }
     printf("Средняя температура по месяцам:\n"); 
     if (month_counter > 0) {
@@ -146,14 +144,10 @@ void year_a_m(const char *filename){
     file = fopen(filename, "r");
     if(file == NULL){
         printf("Ошибка чтения файла!");
-        
     }
     while (fscanf(file, "%d;%d;%d;%d;%d;%f", &year, &month, &day, &hour, &minute, &temperature) == 6) {
-    
         year_counter++;
         year_temperature_sum += temperature;
-        
-         
     }
     printf("Средняя температура по месяцам:\n"); 
     if (year_counter > 0) {
@@ -175,12 +169,10 @@ void max_g(const char *filename){
         printf("Ошибка чтения файла");
     }
     while (fscanf(file, "%d;%d;%d;%d;%d;%f", &year, &month, &day, &hour, &minute, &temperature) == 6) {
-       
         if(!found || temperature > max_tmp){
             max_tmp = temperature;
             found = true;
         }
-        
     }
     fclose(file);
     if(found){
@@ -203,7 +195,6 @@ void min_g(const char *filename){
             min_tmp = temperature;
             found = true;
         }
-        
     }
     fclose(file);
     if(found){

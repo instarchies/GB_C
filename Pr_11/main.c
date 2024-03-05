@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "temp_functions.h"
-//temperature_big.csv
 
 int main(void){
     char filename[30];
