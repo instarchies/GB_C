@@ -111,7 +111,7 @@ void max_t(const char *filename, int _month){
     }
 }
 
-void vivod(const char *filename){
+void statistic(const char *filename){
     FILE *file;
     int year, month, day, hour, minute;
     float temperature;

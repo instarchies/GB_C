@@ -34,7 +34,7 @@ int main(void){
         min_g(filename);
     } 
     else if (strncmp(str, "-ys", 3) == 0) {
-        vivod(filename);
+        statistic(filename);
     } 
     else if (strncmp(str, "-m", 2) == 0 && sscanf(str + 2, "%d", &month_number) == 1) {
         month_statistic(filename, month_number);
