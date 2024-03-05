@@ -1,6 +1,11 @@
 {
     "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
-        "ctype.h": "c"
+        "ctype.h": "c",
+        "solution.h": "c",
+        "temp_functions.h": "c",
+        "stdio.h": "c",
+        "stdlib.h": "c",
+        "string.h": "c"
     }
 }
