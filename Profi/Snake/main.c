@@ -7,7 +7,7 @@
 
 #define WIDTH 40
 #define HEIGHT 20
-
+// добавил типо яблочка, ибо просто змейка скучно)
 int x, y, fruitX, fruitY, score;
 int tailX[100], tailY[100];
 int nTail;
@@ -105,7 +105,28 @@ void Input() {
         case 'x':
             exit(0);
             break;
+        case 'A':
+            if (dir != RIGHT) 
+                dir = LEFT;
+            break;
+        case 'D':
+            if (dir != LEFT) 
+                dir = RIGHT;
+            break;
+        case 'W':
+            if (dir != DOWN) 
+                dir = UP;
+            break;
+        case 'S':
+            if (dir != UP)
+                dir = DOWN;
+            break;
+        case 'X':
+            exit(0);
+            break;
         }
+        
+        
     }
 }
 
