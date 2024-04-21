@@ -7,12 +7,18 @@
 
 #define WIDTH 40
 #define HEIGHT 20
-// добавил типо яблочка, ибо просто змейка скучно)
-int x, y, fruitX, fruitY, score;
-int tailX[100], tailY[100];
-int nTail;
-enum eDirection { STOP = 0, LEFT, RIGHT, UP, DOWN };
-enum eDirection dir;
+#define INITIAL_DELAY 100000 // Изначальная задержка 100000 микросекунд (0.1 секунды)
+
+struct Snake {
+    int x, y;
+    int tailX[100], tailY[100];
+    int nTail;
+    int dir;
+};
+
+struct Apple {
+    int x, y;
+};
 
 int kbhit(void) {
     struct termios oldt, newt;
@@ -34,18 +40,17 @@ int kbhit(void) {
     }
     return 0;
 }
-// нужна была функция kbhit, но в стандартной библиотеки ее нет((, поэтому я взял с инета ее и добавил для змейки ;)
 
-void Setup() {
-    x = WIDTH / 2;
-    y = HEIGHT / 2;
-    fruitX = rand() % WIDTH;
-    fruitY = rand() % HEIGHT;
-    score = 0;
-    dir = STOP;
+void Setup(struct Snake *snake, struct Apple *apple) {
+    snake->x = WIDTH / 2;
+    snake->y = HEIGHT / 2;
+    apple->x = rand() % WIDTH;
+    apple->y = rand() % HEIGHT;
+    snake->dir = 0;
+    snake->nTail = 0;
 }
 
-void Draw() {
+void Draw(struct Snake snake, struct Apple apple, int score) {
     system("clear");
     for (int i = 0; i < WIDTH+2; i++)
         printf("#");
@@ -54,14 +59,14 @@ void Draw() {
         for (int j = 0; j < WIDTH; j++) {
             if (j == 0)
                 printf("#");
-            if (i == y && j == x)
+            if (i == snake.y && j == snake.x)
                 printf("@");
-            else if (i == fruitY && j == fruitX)
+            else if (i == apple.y && j == apple.x)
                 printf("*");
             else {
                 int print = 0;
-                for (int k = 0; k < nTail; k++) {
-                    if (tailX[k] == j && tailY[k] == i) {
+                for (int k = 0; k < snake.nTail; k++) {
+                    if (snake.tailX[k] == j && snake.tailY[k] == i) {
                         printf("*");
                         print = 1;
                     }
@@ -79,110 +84,120 @@ void Draw() {
     for (int i = 0; i < WIDTH+2; i++)
         printf("#");
     printf("\n");
-    printf("Score:%d\n", score);
+    printf("Your score:%d\n", score);
+    printf("Press 'P' to pause.\n");
 }
 
-void Input() {
+void Input(struct Snake *snake, int *paused) {
     if (kbhit()) {
         char input = getchar();
         switch (input) {
         case 'a':
-            if (dir != RIGHT) 
-                dir = LEFT;
+        case 'A':
+            if (snake->dir != 2) 
+                snake->dir = 1;
             break;
         case 'd':
-            if (dir != LEFT) 
-                dir = RIGHT;
+        case 'D':
+            if (snake->dir != 1) 
+                snake->dir = 2;
             break;
         case 'w':
-            if (dir != DOWN) 
-                dir = UP;
+        case 'W':
+            if (snake->dir != 4) 
+                snake->dir = 3;
             break;
         case 's':
-            if (dir != UP)
-                dir = DOWN;
+        case 'S':
+            if (snake->dir != 3)
+                snake->dir = 4;
             break;
         case 'x':
-            exit(0);
-            break;
-        case 'A':
-            if (dir != RIGHT) 
-                dir = LEFT;
-            break;
-        case 'D':
-            if (dir != LEFT) 
-                dir = RIGHT;
-            break;
-        case 'W':
-            if (dir != DOWN) 
-                dir = UP;
-            break;
-        case 'S':
-            if (dir != UP)
-                dir = DOWN;
-            break;
         case 'X':
             exit(0);
             break;
+        case 'p':
+        case 'P':
+            *paused = !(*paused); // Переключаем состояние паузы
+            break;
         }
-        
-        
     }
 }
 
-void Logic() {
-    int prevX = tailX[0];
-    int prevY = tailY[0];
+void Logic(struct Snake *snake, struct Apple *apple, int *score, int *delay) {
+    int prevX = snake->tailX[0];
+    int prevY = snake->tailY[0];
     int prev2X, prev2Y;
-    tailX[0] = x;
-    tailY[0] = y;
-    for (int i = 1; i < nTail; i++) {
-        prev2X = tailX[i];
-        prev2Y = tailY[i];
-        tailX[i] = prevX;
-        tailY[i] = prevY;
+    snake->tailX[0] = snake->x;
+    snake->tailY[0] = snake->y;
+    for (int i = 1; i < snake->nTail; i++) {
+        prev2X = snake->tailX[i];
+        prev2Y = snake->tailY[i];
+        snake->tailX[i] = prevX;
+        snake->tailY[i] = prevY;
         prevX = prev2X;
         prevY = prev2Y;
     }
-    switch (dir) {
-    case LEFT:
-        x--;
+    switch (snake->dir) {
+    case 1: // LEFT
+        snake->x--;
         break;
-    case RIGHT:
-        x++;
+    case 2: // RIGHT
+        snake->x++;
         break;
-    case UP:
-        y--;
+    case 3: // UP
+        snake->y--;
         break;
-    case DOWN:
-        y++;
+    case 4: // DOWN
+        snake->y++;
         break;
     default:
         break;
     }
-    if (x >= WIDTH) x = 0; else if (x < 0) x = WIDTH - 1;
-    if (y >= HEIGHT) y = 0; else if (y < 0) y = HEIGHT - 1;
+    if (snake->x >= WIDTH) snake->x = 0; else if (snake->x < 0) snake->x = WIDTH - 1;
+    if (snake->y >= HEIGHT) snake->y = 0; else if (snake->y < 0) snake->y = HEIGHT - 1;
 
-    for (int i = 0; i < nTail; i++)
-        if (tailX[i] == x && tailY[i] == y)
+    for (int i = 0; i < snake->nTail; i++)
+        if (snake->tailX[i] == snake->x && snake->tailY[i] == snake->y)
             exit(0);
+            
 
-    if (x == fruitX && y == fruitY) {
-        score += 10;
-        fruitX = rand() % WIDTH;
-        fruitY = rand() % HEIGHT;
-        nTail++;
+    if (snake->x == apple->x && snake->y == apple->y) {
+        snake->nTail++;
+        *score += 10;
+        apple->x = rand() % WIDTH;
+        apple->y = rand() % HEIGHT;
+        // Увеличиваем скорость змеи при достижении нового уровня
+        *delay = *delay - 5000; // Уменьшаем задержку на 0.01 секунды (10000 микросекунд)
+        if (*delay < 5000) // Ограничиваем минимальную задержку
+            *delay = 5000;
     }
 }
 
 int main() {
     srand(time(NULL));
-    Setup();
+    struct Snake snake;
+    struct Apple apple;
+    int score = 0;
+    int paused = 0;
+    int delay = INITIAL_DELAY;
+    int printPausedMessage = 1; // Флаг для проверки, нужно ли выводить сообщение о паузе
+
+    Setup(&snake, &apple);
     while (1) {
-        Draw();
-        Input();
-        Logic();
-        usleep(100000); 
+        if (!paused) {
+            printPausedMessage = 1; // Восстанавливаем флаг, чтобы сообщение о паузе могло быть выведено, если пользователь снова нажмет 'P'
+            Draw(snake, apple, score);
+            Input(&snake, &paused);
+            Logic(&snake, &apple, &score, &delay);
+        } else {
+            if (printPausedMessage) {
+                printf("Paused. Press 'P' to resume.\n");
+                printPausedMessage = 0; // Устанавливаем флаг, чтобы сообщение о паузе не выводилось снова до тех пор, пока игра не продолжится
+            }
+            Input(&snake, &paused);
+        }
+        usleep(delay); 
     }
     return 0;
 }
