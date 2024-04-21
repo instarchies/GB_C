@@ -7,7 +7,7 @@
 
 #define WIDTH 40
 #define HEIGHT 20
-#define INITIAL_DELAY 100000 // Изначальная задержка 100000 микросекунд (0.1 секунды)
+#define INITIAL_DELAY 100000 
 
 struct Snake {
     int x, y;
@@ -118,7 +118,7 @@ void Input(struct Snake *snake, int *paused) {
             break;
         case 'p':
         case 'P':
-            *paused = !(*paused); // Переключаем состояние паузы
+            *paused = !(*paused);
             break;
         }
     }
@@ -139,16 +139,16 @@ void Logic(struct Snake *snake, struct Apple *apple, int *score, int *delay) {
         prevY = prev2Y;
     }
     switch (snake->dir) {
-    case 1: // LEFT
+    case 1: 
         snake->x--;
         break;
-    case 2: // RIGHT
+    case 2:
         snake->x++;
         break;
-    case 3: // UP
+    case 3:
         snake->y--;
         break;
-    case 4: // DOWN
+    case 4: 
         snake->y++;
         break;
     default:
@@ -167,9 +167,8 @@ void Logic(struct Snake *snake, struct Apple *apple, int *score, int *delay) {
         *score += 10;
         apple->x = rand() % WIDTH;
         apple->y = rand() % HEIGHT;
-        // Увеличиваем скорость змеи при достижении нового уровня
-        *delay = *delay - 5000; // Уменьшаем задержку на 0.01 секунды (10000 микросекунд)
-        if (*delay < 5000) // Ограничиваем минимальную задержку
+        *delay = *delay - 5000; 
+        if (*delay < 5000) 
             *delay = 5000;
     }
 }
@@ -181,19 +180,19 @@ int main() {
     int score = 0;
     int paused = 0;
     int delay = INITIAL_DELAY;
-    int printPausedMessage = 1; // Флаг для проверки, нужно ли выводить сообщение о паузе
+    int printPausedMessage = 1;
 
     Setup(&snake, &apple);
     while (1) {
         if (!paused) {
-            printPausedMessage = 1; // Восстанавливаем флаг, чтобы сообщение о паузе могло быть выведено, если пользователь снова нажмет 'P'
+            printPausedMessage = 1;
             Draw(snake, apple, score);
             Input(&snake, &paused);
             Logic(&snake, &apple, &score, &delay);
         } else {
             if (printPausedMessage) {
                 printf("Paused. Press 'P' to resume.\n");
-                printPausedMessage = 0; // Устанавливаем флаг, чтобы сообщение о паузе не выводилось снова до тех пор, пока игра не продолжится
+                printPausedMessage = 0;
             }
             Input(&snake, &paused);
         }
