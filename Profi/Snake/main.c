@@ -77,7 +77,7 @@ void Draw(struct Snake snake, struct Apple apple, int score, int snakeColor) {
             if (j == 0)
                 mvprintw(i + 1, j, "#");
             if (i == snake.y && j == snake.x) {
-                setColor(snakeColor); // Use selected snake color
+                setColor(snakeColor); 
                 mvprintw(i + 1, j + 1, "@");
                 setColor(0); 
             } else if (i == apple.y && j == apple.x) {
@@ -88,7 +88,7 @@ void Draw(struct Snake snake, struct Apple apple, int score, int snakeColor) {
                 int print = 0;
                 for (int k = 0; k < snake.nTail; k++) {
                     if (snake.tailX[k] == j && snake.tailY[k] == i) {
-                        setColor(snakeColor); // Use selected snake color
+                        setColor(snakeColor); 
                         mvprintw(i + 1, j + 1, "*");
                         setColor(0); 
                         print = 1;
@@ -218,7 +218,7 @@ void startMenu(int *snakeColor) {
         for (int i = 0; i < n_choices; i++) {
             if (i == highlight)
                 attron(A_REVERSE);
-            mvprintw(i + 2, 2, "%s", choices[i]);  // Use format string
+            mvprintw(i + 2, 2, "%s", choices[i]);  
             if (i == highlight)
                 attroff(A_REVERSE);
         }
@@ -232,7 +232,7 @@ void startMenu(int *snakeColor) {
             case KEY_DOWN:
                 highlight = (highlight == n_choices - 1) ? 0 : highlight + 1;
                 break;
-            case 10:  // Enter key
+            case 10:  
                 choice = highlight;
                 break;
             default:
@@ -241,17 +241,15 @@ void startMenu(int *snakeColor) {
 
         if (choice != -1) {
             if (choice == 0) {
-                // Start Game
                 return;
             } else if (choice == 1) {
-                // Choose Snake Color
                 while (1) {
                     clear();
                     mvprintw(0, 0, "Choose Snake Color");
                     for (int i = 0; i < n_colorChoices; i++) {
                         if (i == colorHighlight)
                             attron(A_REVERSE);
-                        mvprintw(i + 2, 2, "%s", colorChoices[i]);  // Use format string
+                        mvprintw(i + 2, 2, "%s", colorChoices[i]);  
                         if (i == colorHighlight)
                             attroff(A_REVERSE);
                     }
@@ -265,22 +263,21 @@ void startMenu(int *snakeColor) {
                         case KEY_DOWN:
                             colorHighlight = (colorHighlight == n_colorChoices - 1) ? 0 : colorHighlight + 1;
                             break;
-                        case 10:  // Enter key
-                            *snakeColor = colorHighlight + 1; // 1 for Red, 2 for Blue, 3 for Green
+                        case 10:  
+                            *snakeColor = colorHighlight + 1; 
                             break;
                         default:
                             break;
                     }
 
-                    if (c == 10)  // If Enter key was pressed
+                    if (c == 10) 
                         break;
                 }
             } else if (choice == 2) {
-                // Exit
                 endwin();
                 exit(0);
             }
-            choice = -1; // Reset choice after handling
+            choice = -1; 
         }
     }
 }
@@ -291,30 +288,26 @@ int main() {
     int score = 0;
     int delay = INITIAL_DELAY;
     int paused = 0;
-    int snakeColor = 1; // Default to Red
+    int snakeColor = 1; 
 
     initscr();
     noecho();
     curs_set(FALSE);
-    keypad(stdscr, TRUE); // Enable arrow keys
+    keypad(stdscr, TRUE); 
     start_color();
-    init_pair(1, COLOR_RED, COLOR_BLACK); // Color for Snake (Red)
-    init_pair(2, COLOR_BLUE, COLOR_BLACK); // Color for Snake (Blue)
-    init_pair(3, COLOR_GREEN, COLOR_BLACK); // Color for Apple
-
-    startMenu(&snakeColor); // Show start menu and set snake color
-
+    init_pair(1, COLOR_RED, COLOR_BLACK); 
+    init_pair(2, COLOR_BLUE, COLOR_BLACK); 
+    init_pair(3, COLOR_GREEN, COLOR_BLACK); 
+    startMenu(&snakeColor); 
     Setup(&snake1, &apple);
-
     while (1) {
-        Draw(snake1, apple, score, snakeColor); // Pass snakeColor to Draw function
+        Draw(snake1, apple, score, snakeColor); 
         Input(&snake1, &paused);
         if (!paused) {
             Logic(&snake1, &apple, &score, &delay);
             usleep(delay);
         }
     }
-
     endwin();
     return 0;
 }
