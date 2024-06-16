@@ -6,7 +6,7 @@
 #include "field.h"
 #include "menu.h"
 
-extern struct Drone drones[MAX_DRONES]; // Объявляем глобальную переменную
+extern struct Drone drones[MAX_DRONES];
 
 void endGame() {
     endwin();
@@ -16,7 +16,7 @@ void endGame() {
 
 int main() {
     int droneCount = 1;
-    int mode = 0; // 0 - manual, 1 - autopilot
+    int mode = 0;
 
     initscr();
     noecho();
